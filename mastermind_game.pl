@@ -32,11 +32,14 @@ pegs([1,2,3,4,5,6,7,8]).
 n_pegs(4).
 initial_guess([1,1,2,2]).
 
-% start
+% start begins the game.
 start :-
     rounds(R),
     guess(R,_).
 
+% guess(N,R)
+% N is the number of rounds left in the game.
+% R is the result, i.e. whether you have won or lost.
 guess(0,win) :-
     writeln('You Win!'),
     writeln('Game Over.').
@@ -53,11 +56,14 @@ guess(N,_) :-
     guess_helper(G,N1,N,F),
     guess(N1,F).
 
+% Handles the invalid guess case
 guess_helper(G,N1,N2,_) :-
     not(valid_guess(G)),
     N1 is N2,
     writeln('Invalid Guess, Please try again.').
 
+% Handles the case where we have a valid guess but did not win, so it
+% returns a hint.
 guess_helper(G,N1,N2,_) :-
     valid_guess(G),
     not(code(G)),
@@ -66,6 +72,7 @@ guess_helper(G,N1,N2,_) :-
     give_hint(G,H),
     writef('Hint: %q\n',[H]).
 
+% Handles the case where we have made all our guesses and we have not won.
 guess_helper(G,N1,N2,R) :-
     valid_guess(G),
     not(code(G)),
@@ -73,6 +80,7 @@ guess_helper(G,N1,N2,R) :-
     N2 = 1,
     R = lose.
 
+% Hanldes the case where we win the game.
 guess_helper(G,N1,_,R) :-
     valid_guess(G),
     code(G),
