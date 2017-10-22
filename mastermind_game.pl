@@ -50,24 +50,32 @@ guess(N,_) :-
     GN is R-N+1,
     writef('Guess #%q: ',[GN]),
     read(G),
-    give_hint(G,H),
-    guess_helper(H,N1,N,F),
+    guess_helper(G,N1,N,F),
     guess(N1,F).
 
-guess_helper(H,N1,N2,_) :-
-    dif(H,[b,b,b,b]),
+guess_helper(G,N1,N2,_) :-
+    not(valid_guess(G)),
+    N1 is N2,
+    writeln('Invalid Guess, Please try again.').
+
+guess_helper(G,N1,N2,_) :-
+    valid_guess(G),
+    not(code(G)),
     N1 is N2-1,
     N1 >= 1,
+    give_hint(G,H),
     writef('Hint: %q\n',[H]).
 
-guess_helper(H,N1,N2,R) :-
-    dif(H,[b,b,b,b]),
+guess_helper(G,N1,N2,R) :-
+    valid_guess(G),
+    not(code(G)),
     N1 = 0,
     N2 = 1,
     R = lose.
 
-guess_helper(H,N1,_,R) :-
-    H == [b,b,b,b],
+guess_helper(G,N1,_,R) :-
+    valid_guess(G),
+    code(G),
     N1 is 0,
     R = win.
 
@@ -143,6 +151,7 @@ maybe_code_helper(Hint, Guess) :-
 % Guess is correctly formed if it has length 4 and all elements
 % are valid pegs.
 valid_guess(Guess) :-
+    is_list(Guess),
     length(Guess, 4),
     valid_guess_helper(Guess).
 
