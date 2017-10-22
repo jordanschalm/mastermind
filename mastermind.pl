@@ -12,7 +12,7 @@
 
     Symbol interpretation:
         1-6 represent the six colored guess pegs
-        w/b represent the white and black hint pegs
+        w,b represent the white and black hint pegs
             black - correct colour and position
             white - correct colour, incorrect position
         A hint is encoded as a list of w/b, ordered arbitrarily
@@ -35,11 +35,27 @@ is_peg(Peg) :-
     member(Peg, X).
 
 % Computes a hint given the code and a guess
-% TODO
 % give_hint(Guess, Hint).
-give_hint(Guess, [b, b, b, b]) :- code(Guess).
+give_hint(G, H) :-
+    code(C),
+    position_hint(G,C,BN),
+    color_hint(G,C,WN),
+    num_pegs(w,WH,WN),
+    num_pegs(b,BH,BN),
+    append(BH,WH,H).
 
-% N is the number of matching positions
+% num_pegs(P,H,R)
+% Computes the number of P type(b/w) pegs in a Hint
+num_pegs(_,[],0).
+num_pegs(P,[P|T],R) :-
+    num_pegs(P,T,R1),
+    R is R1+1.
+num_pegs(P,[H|T],R) :-
+    dif(P,H),
+    num_pegs(P,T,R).
+
+% position_hint(G,C,N)
+% Computes the number of matching positions between G and C
 position_hint([],[],0).
 position_hint([GH|GT],[GH|CT],N) :-
     position_hint(GT,CT,N1),
@@ -48,12 +64,15 @@ position_hint([GH|GT],[CH|CT],N) :-
     dif(GH,CH),
     position_hint(GT,CT,N).
 
-% N is the number of matching colors
+% color_hint(G,C,N)
+% Computes the number of matching colors between G and C
 color_hint([],_,0).
 color_hint(G,C,N) :-
     msort(G,GR),
     msort(C,CR),
-    color_hint_helper(GR,CR,N).
+    color_hint_helper(GR,CR,N1),
+    position_hint(G,C,N2),
+    N is N1-N2.
 
 color_hint_helper(_,[],0).
 color_hint_helper([],_,0).
