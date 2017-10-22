@@ -39,6 +39,36 @@ is_peg(Peg) :-
 % give_hint(Guess, Hint).
 give_hint(Guess, [b, b, b, b]) :- code(Guess).
 
+% N is the number of matching positions
+position_hint([],[],0).
+position_hint([GH|GT],[GH|CT],N) :-
+    position_hint(GT,CT,N1),
+    N is N1+1.
+position_hint([GH|GT],[CH|CT],N) :-
+    dif(GH,CH),
+    position_hint(GT,CT,N).
+
+% N is the number of matching colors
+color_hint([],_,0).
+color_hint(G,C,N) :-
+    msort(G,GR),
+    msort(C,CR),
+    color_hint_helper(GR,CR,N).
+
+color_hint_helper(_,[],0).
+color_hint_helper([],_,0).
+color_hint_helper([H|GT],[H|CT],N) :-
+    color_hint_helper(GT,CT,N1),
+    N is N1 + 1.
+
+color_hint_helper([GH|GT],[CH|CT],N) :-
+    CH > GH,
+    color_hint_helper(GT,[CH|CT],N).
+
+color_hint_helper([GH|GT],[CH|CT],N) :-
+    GH > CH,
+    color_hint_helper([GH|GT],CT,N).
+
 % Matches guesses that could be the code, given a set of hints.
 maybe_code([], Guess) :- 
     valid_guess(Guess).
