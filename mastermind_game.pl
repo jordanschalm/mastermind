@@ -14,7 +14,10 @@ Symbol interpretation:
 rounds(10).
 
 % Choose the code.
-code([1,2,3,4]).
+
+code_generator(C) :-
+    length(C, 4),
+    maplist(random(1,9), C).
 
 % Constants
 w.
@@ -25,56 +28,58 @@ initial_guess([1,1,2,2]).
 
 % start begins the game.
 start :-
+    code_generator(C),
     rounds(R),
-    guess(R,_).
+    guess(R,_,C).
 
 % guess(N,R)
 % N is the number of rounds left in the game.
 % R is the result, i.e. whether you have won or lost.
-guess(0,win) :-
-    writeln('You Win!'),
+guess(0,win,_) :-
+    writeln('\nYou Win!'),
     writeln('Game Over.').
 
-guess(0,lose) :-
-    writeln('You Lose :('),
+guess(0,lose,C) :-
+    writeln('\nYou Lose :('),
+    writef('The correct code was: %q\n',[C]),
     writeln('Game Over.').
 
-guess(N,_) :-
+guess(N,_,C) :-
     rounds(R),
     GN is R-N+1,
     writef('Guess #%q: ',[GN]),
     read(G),
-    guess_helper(G,N1,N,F),
-    guess(N1,F).
+    guess_helper(G,N1,N,F,C),
+    guess(N1,F,C).
 
 % Handles the invalid guess case
-guess_helper(G,N1,N2,_) :-
+guess_helper(G,N1,N2,_,_) :-
     not(valid_guess(G)),
     N1 is N2,
     writeln('Invalid Guess, Please try again.').
 
 % Handles the case where we have a valid guess but did not win, so it
 % returns a hint.
-guess_helper(G,N1,N2,_) :-
+guess_helper(G,N1,N2,_,C) :-
     valid_guess(G),
-    not(code(G)),
+    dif(G,C),
     N1 is N2-1,
     N1 >= 1,
-    give_hint(G,H),
+    give_hint(G,H,C),
     writef('Hint: %q\n',[H]).
 
 % Handles the case where we have made all our guesses and we have not won.
-guess_helper(G,N1,N2,R) :-
+guess_helper(G,N1,N2,R,C) :-
     valid_guess(G),
-    not(code(G)),
+    dif(G,C),
     N1 = 0,
     N2 = 1,
     R = lose.
 
-% Hanldes the case where we win the game.
-guess_helper(G,N1,_,R) :-
+% Handles the case where we win the game.
+guess_helper(G,N1,_,R,C) :-
     valid_guess(G),
-    code(G),
+    not(dif(G,C)),
     N1 is 0,
     R = win.
 
@@ -85,8 +90,7 @@ is_peg(Peg) :-
 
 % Computes a hint given the code and a guess
 % give_hint(Guess, Hint).
-give_hint(G, H) :-
-    code(C),
+give_hint(G,H,C) :-
     position_hint(G,C,BN),
     color_hint(G,C,WN),
     num_pegs(w,WH,WN),
