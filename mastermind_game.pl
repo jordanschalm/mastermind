@@ -1,16 +1,7 @@
 /*
-    Team:
-        Jordan Schalm   37955135
-        David Julien    16997132
-        Seerat Sekhon   35145135
+Mastermind Game responds to guesses and provides a hint.
 
-    Project:
-        Mastermind - An implementation of both players in the Mastermind game.
-        Code Breaker: attempts to break the code by making guesses and
-        receiving hints.
-        Code Maker: responds to guesses and provides a hint.
-
-    Symbol interpretation:
+Symbol interpretation:
         1-8 represent the six colored guess pegs
         w,b represent the white and black hint pegs
             black - correct colour and position
@@ -146,16 +137,6 @@ color_hint_helper([GH|GT],[CH|CT],N) :-
     GH > CH,
     color_hint_helper([GH|GT],CT,N).
 
-% Matches guesses that could be the code, given a set of hints.
-maybe_code([], Guess) :- 
-    valid_guess(Guess).
-maybe_code([Hint|T], Guess) :-
-    maybe_code_helper(Hint, Guess),
-    maybe_code(T, Guess).
-
-maybe_code_helper(Hint, Guess) :-
-    give_hint(Guess, Hint).
-
 % Guess is correctly formed if it has length 4 and all elements
 % are valid pegs.
 valid_guess(Guess) :-
@@ -167,7 +148,5 @@ valid_guess_helper([]).
 valid_guess_helper([H|T]) :-
     is_peg(H),
     valid_guess_helper(T).
-
-
 
 solution.

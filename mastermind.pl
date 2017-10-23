@@ -1,3 +1,17 @@
+/*
+    Team:
+        Jordan Schalm   37955135
+        David Julien    16997132
+        Seerat Sekhon   35145135
+
+    Project:
+        Mastermind - An implementation of both players in the Mastermind game.
+        Code Breaker: attempts to break the code by making guesses and
+        receiving hints.
+        Game: responds to guesses and provides a hint.
+*/
+
+% Initialize
 :-
 	[mastermind_game, permutation],
 	writeln('\n----MASTERMIND----\n'),
