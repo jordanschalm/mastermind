@@ -32,9 +32,10 @@ start :-
     rounds(R),
     guess(R,_,C).
 
-% guess(N,R)
+% guess(N,R,C)
 % N is the number of rounds left in the game.
 % R is the result, i.e. whether you have won or lost.
+% C is the correct code.
 guess(0,win,_) :-
     writeln('\nYou Win!'),
     writeln('Game Over.').
