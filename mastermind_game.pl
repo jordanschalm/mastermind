@@ -1,39 +1,45 @@
+:- use_module(library(random)).
 /*
 Mastermind Game responds to guesses and provides a hint.
 
 Symbol interpretation:
-        1-8 represent the six colored guess pegs
+        1-6 represent the six colored guess pegs
         w,b represent the white and black hint pegs
             black - correct colour and position
             white - correct colour, incorrect position
         A hint is encoded as a list of w/b, ordered arbitrarily
-        A code is encoded as a list of 1-8
+        A code is encoded as a list of 1-6
 */
 
-% rounds represents the number of guesses you have
-rounds(10).
-
 % Choose the code.
+code_generator(C) :-
+    duplicates(YN),
+    YN == y,
+    code_with_repeats_generator(C).
 
 code_generator(C) :-
+    duplicates(YN),
+    YN == n,
+    code_without_repeats_generator(C).
+
+code_with_repeats_generator(C) :-
     length(C, 4),
-    maplist(random(1,9), C).
+    maplist(random(1,7), C).
+
+code_without_repeats_generator(C) :-
+    randseq(4, 6, C).
 
 % Constants
-w.
-b.
-pegs([1,2,3,4,5,6,7,8]).
-n_pegs(4).
-initial_guess([1,1,2,2]).
+pegs([1,2,3,4,5,6]).
 
 % start begins the game.
 start :-
     code_generator(C),
-    rounds(R),
+    turns(R),
     guess(R,_,C).
 
 % guess(N,R,C)
-% N is the number of rounds left in the game.
+% N is the number of turns left in the game.
 % R is the result, i.e. whether you have won or lost.
 % C is the correct code.
 guess(0,win,_) :-
@@ -46,7 +52,7 @@ guess(0,lose,C) :-
     writeln('Game Over.').
 
 guess(N,_,C) :-
-    rounds(R),
+    turns(R),
     GN is R-N+1,
     writef('Guess #%q: ',[GN]),
     read(G),
@@ -153,5 +159,3 @@ valid_guess_helper([]).
 valid_guess_helper([H|T]) :-
     is_peg(H),
     valid_guess_helper(T).
-
-solution.
