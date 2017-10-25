@@ -1,4 +1,3 @@
-:- use_module(library(random)).
 /*
 Mastermind Game responds to guesses and provides a hint.
 
@@ -11,7 +10,9 @@ Symbol interpretation:
         A code is encoded as a list of 1-6
 */
 
-% Choose the code.
+:- use_module(library(random)).
+
+% Generate the code.
 code_generator(C) :-
     duplicates(YN),
     YN == y,

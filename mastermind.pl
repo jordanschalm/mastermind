@@ -5,10 +5,7 @@
         Seerat Sekhon   35145135
 
     Project:
-        Mastermind - An implementation of both players in the Mastermind game.
-        Code Breaker: attempts to break the code by making guesses and
-        receiving hints.
-        Game: responds to guesses and provides a hint.
+        Mastermind - An implementation of the classic Mastermind game.
 */
 
 % Initialize
@@ -17,10 +14,10 @@
 	writeln('\n----MASTERMIND----\n'),
 	writeln('Created by:'),
 	writeln('    David Julien\n    Jordan Schalm\n    Seerat Sekhon\n'),
-	writeln('type "rules." to learn the rules of the game.'),
-	writeln('type "help." to learn how the game is played.'),
-	writeln('type "setup." to change the game settings.\n'),
-	writeln('type "start." to start the game.\n').
+	writeln('Use "rules." to learn the rules of the game.'),
+	writeln('Use "help." to learn how the game is played.'),
+	writeln('Use "setup." to change the game settings.\n'),
+	writeln('Use "start." to start the game.\n').
 
 rules :-
 	writeln('RULES:'),
@@ -39,5 +36,5 @@ rules :-
 help :-
 	writeln('HELP:'),
 	writeln('-Start the game with "start."'),
-	writeln('-Make a guess by entering a list of 4 numbers within 1-8 and press enter. i.e. [1,2,3,8].'),
+	writeln('-Make a guess by entering a list of 4 numbers within 1-6 and press enter. i.e. [1,2,3,6].'),
 	writeln('-Hints will be returned as a list of w and b, where w indicates a correct colour but incorrect position, and b represents a correct color with a correct position.').
